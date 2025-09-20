@@ -11,7 +11,7 @@ import java.util.concurrent.ExecutorService;
 public final class App {
     private static final int BATCH_SIZE = 4;
 
-    private static ExecutorService executor = Executors.newCachedThreadPool();
+    private static ExecutorService globalExecutor = Executors.newCachedThreadPool();
 
     private static Deque<String> getAllTargets() {
         var targets = new ArrayDeque<String>();
@@ -55,7 +55,7 @@ public final class App {
 
         for (int i = 0; i < n; i++) {
             var b = batches.get(i);
-            var fut = CompletableFuture.runAsync(() -> Scanner.ScanList(b), executor);
+            var fut = CompletableFuture.runAsync(() -> Scanner.ScanList(b), globalExecutor);
             futures[i] = fut;
         }
 
@@ -66,6 +66,6 @@ public final class App {
     }
 
     public static void shutdown() {
-        executor.shutdown();
+        globalExecutor.shutdown();
     }
 }
