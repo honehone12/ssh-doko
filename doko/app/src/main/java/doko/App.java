@@ -13,19 +13,18 @@ public final class App {
 
     private static ExecutorService globalExecutor = Executors.newCachedThreadPool();
 
-    private static Deque<String> getAllTargets() {
+    private static Deque<String> getAllTargets(String netAddr) {
         var targets = new ArrayDeque<String>();
-        // this range should be configured by command line or gui
         for (int i = 2; i < 256; i++) {
-            var addr = String.format("192.168.11.%d", i);
+            var addr = String.format("%s.%d", netAddr, i);
             targets.add(addr);
         }
         return targets;
     }
 
-    private static List<List<String>> createBatches() {
+    private static List<List<String>> createBatches(String netAddr) {
         var batches = new ArrayList<List<String>>();
-        var targets = getAllTargets();
+        var targets = getAllTargets(netAddr);
         var total = targets.size();
         var futureSize = (total + BATCH_SIZE - 1) / BATCH_SIZE;
 
@@ -46,10 +45,10 @@ public final class App {
         return batches;
     }
 
-    public static void run() {
+    public static void run(AppParams params) {
         System.out.println("scanning ssh port...\n");
 
-        var batches = createBatches();
+        var batches = createBatches(params.netAddr());
         var n = batches.size();
         var futures = new CompletableFuture[n];
 
