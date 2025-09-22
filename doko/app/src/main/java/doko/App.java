@@ -1,19 +1,22 @@
 package doko;
 
-import java.util.concurrent.Executors;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
 
-public final class App {
+public class App extends MultiThreadService {
     private static final int BATCH_SIZE = 4;
+    private static final App INSTANCE = new App();
 
-    private static ExecutorService globalExecutor = Executors.newCachedThreadPool();
+    private App() {}
 
-    private static Deque<String> getAllTargets(String netAddr) {
+    public static App instance() {
+        return INSTANCE;
+    }
+
+    private Deque<String> getAllTargets(String netAddr) {
         var targets = new ArrayDeque<String>();
         for (int i = 2; i < 256; i++) {
             var addr = String.format("%s.%d", netAddr, i);
@@ -22,7 +25,7 @@ public final class App {
         return targets;
     }
 
-    private static List<List<String>> createBatches(String netAddr) {
+    private List<List<String>> createBatches(String netAddr) {
         var batches = new ArrayList<List<String>>();
         var targets = getAllTargets(netAddr);
         var total = targets.size();
@@ -45,16 +48,17 @@ public final class App {
         return batches;
     }
 
-    public static void run(AppParams params) {
+    public void run(AppParams params) {
         System.out.println("scanning ssh port...\n");
 
+        var scanner = new Scanner();
         var batches = createBatches(params.netAddr());
         var n = batches.size();
         var futures = new CompletableFuture[n];
 
         for (int i = 0; i < n; i++) {
             var b = batches.get(i);
-            var fut = CompletableFuture.runAsync(() -> Scanner.ScanList(b), globalExecutor);
+            var fut = CompletableFuture.runAsync(() -> scanner.ScanList(b), Executer());
             futures[i] = fut;
         }
 
@@ -62,9 +66,5 @@ public final class App {
         all.join();
 
         System.out.println("\ndone");
-    }
-
-    public static void shutdown() {
-        globalExecutor.shutdown();
     }
 }

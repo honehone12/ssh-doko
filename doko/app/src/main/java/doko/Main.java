@@ -3,19 +3,25 @@ package doko;
 import picocli.CommandLine;
 import picocli.CommandLine.Option;
 
-final class Command implements Runnable {
-
+final class Command implements Runnable { 
     @Option(names={"--netaddr"})
-    private String netAddr = "192.268.11";
+    private String _netAddr = "192.168.11";
 
     public void run() {
-        App.run(new AppParams(netAddr));
+        try {
+            var appInstance = App.instance();
+            appInstance.run(new AppParams(_netAddr));
+            App.shutdown();
+        } catch (Exception e) {
+            System.err.println(e);
+        } finally {
+            App.shutdown();
+        }
     }
 }
 
 public final class Main {
     public static void main(String[] args) {
         new CommandLine(new Command()).execute(args);
-        App.shutdown();
     }    
 }

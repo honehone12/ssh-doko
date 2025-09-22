@@ -9,7 +9,7 @@ public class Scanner {
     private static final int SSH_PORT = 22;
     private static final int TIME_OUT = 250;
 
-    public static void Scan(String addr) {
+    public void Scan(String addr) {
         try {
             var iAddr = InetAddress.getByName(addr);
             var soc = new Socket();
@@ -22,7 +22,7 @@ public class Scanner {
         }
     }
 
-    public static void ScanList(List<String> addrs) {
+    public void ScanList(List<String> addrs) {
         for (String addr : addrs) {
             Scan(addr);
         }
