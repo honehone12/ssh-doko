@@ -11,11 +11,11 @@ public class Scanner {
 
     public void Scan(String addr) {
         try {
-            var iAddr = InetAddress.getByName(addr);
-            var soc = new Socket();
+            final var iAddr = InetAddress.getByName(addr);
+            final var soc = new Socket();
             soc.connect(new InetSocketAddress(iAddr, SSH_PORT), TIME_OUT);
             soc.close();
-            var host = iAddr.getHostName();
+            final var host = iAddr.getHostName();
             System.out.println(addr + " -> " + host);
         } catch (Exception e) {
             return;

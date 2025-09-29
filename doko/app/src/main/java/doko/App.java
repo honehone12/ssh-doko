@@ -27,9 +27,9 @@ public class App extends MultiThreadService {
 
     private List<List<String>> createBatches(String netAddr) {
         var batches = new ArrayList<List<String>>();
-        var targets = getAllTargets(netAddr);
-        var total = targets.size();
-        var futureSize = (total + BATCH_SIZE - 1) / BATCH_SIZE;
+        final var targets = getAllTargets(netAddr);
+        final var total = targets.size();
+        final var futureSize = (total + BATCH_SIZE - 1) / BATCH_SIZE;
 
         for (int i = 0; i < futureSize; i++) {
             var bath = new ArrayList<String>();
@@ -51,18 +51,18 @@ public class App extends MultiThreadService {
     public void run(AppParams params) {
         System.out.println("scanning ssh port...\n");
 
-        var scanner = new Scanner();
-        var batches = createBatches(params.netAddr());
-        var n = batches.size();
+        final var scanner = new Scanner();
+        final var batches = createBatches(params.netAddr());
+        final var n = batches.size();
         var futures = new CompletableFuture[n];
 
         for (int i = 0; i < n; i++) {
-            var b = batches.get(i);
-            var fut = CompletableFuture.runAsync(() -> scanner.ScanList(b), Executer());
+            final var b = batches.get(i);
+            final var fut = CompletableFuture.runAsync(() -> scanner.ScanList(b), Executer());
             futures[i] = fut;
         }
 
-        var all = CompletableFuture.allOf(futures);
+        final var all = CompletableFuture.allOf(futures);
         all.join();
 
         System.out.println("\ndone");

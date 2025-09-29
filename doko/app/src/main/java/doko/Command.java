@@ -12,7 +12,7 @@ final class Command implements Runnable {
         }
         
         try {
-            var appInstance = App.instance();
+            final var appInstance = App.instance();
             appInstance.run(new AppParams(_netAddr));
         } catch (Exception e) {
             System.err.println(e);
