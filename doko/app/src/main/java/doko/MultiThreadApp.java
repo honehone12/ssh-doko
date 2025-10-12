@@ -3,7 +3,7 @@ package doko;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
 
-public abstract class MultiThreadService {
+public abstract class MultiThreadApp {
     private static final ExecutorService GLOBAL_EXECUTER = Executors.newCachedThreadPool();
 
     protected static ExecutorService Executer() {

@@ -6,7 +6,7 @@ import java.util.Deque;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public class App extends MultiThreadService {
+public class App extends MultiThreadApp {
     private static final int BATCH_SIZE = 4;
     private static final App INSTANCE = new App();
 
