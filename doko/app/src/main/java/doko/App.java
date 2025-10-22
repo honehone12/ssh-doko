@@ -10,13 +10,14 @@ public class App extends MultiThreadApp {
     private static final int BATCH_SIZE = 4;
     private static final App INSTANCE = new App();
 
-    private App() {}
+    private App() {
+    }
 
     public static App instance() {
         return INSTANCE;
     }
 
-    private Deque<String> getAllTargets(String netAddr) {
+    Deque<String> getAllTargets(String netAddr) {
         var targets = new ArrayDeque<String>();
         for (int i = 2; i < 256; i++) {
             var addr = String.format("%s.%d", netAddr, i);
@@ -25,7 +26,7 @@ public class App extends MultiThreadApp {
         return targets;
     }
 
-    private List<List<String>> createBatches(String netAddr) {
+    List<List<String>> createBatches(String netAddr) {
         var batches = new ArrayList<List<String>>();
         final var targets = getAllTargets(netAddr);
         final var total = targets.size();
@@ -41,7 +42,7 @@ public class App extends MultiThreadApp {
                 var addr = targets.removeFirst();
                 bath.add(addr);
             }
-            
+
             batches.add(bath);
         }
 
